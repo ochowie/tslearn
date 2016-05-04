@@ -8,8 +8,11 @@ interface HelloProps {
     decr?: () => any;
 }
 
-interface HelloState { counter:number;
+interface HelloState {
+    counter:number;
 }
 
-interface HelloAction { type:string, by:number;
+interface HelloAction {
+    type:string,
+    by:number;
 }

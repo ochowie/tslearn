@@ -21657,15 +21657,21 @@
 	"use strict";
 	var React = __webpack_require__(1);
 	var react_redux_1 = __webpack_require__(181);
-	var mapStateToProps = function (state) { return state; };
-	var mapDispatchToProps = function (dispatch) { return ({
-	    incr: function () {
-	        dispatch({ type: 'INCR', by: 1 });
-	    },
-	    decr: function () {
-	        dispatch({ type: 'INCR', by: -1 });
-	    }
-	}); };
+	var mapStateToProps = function (state) {
+	    return {
+	        counter: state.counter
+	    };
+	};
+	var mapDispatchToProps = function (dispatch) {
+	    return {
+	        incr: function () {
+	            dispatch({ type: 'INCR', by: 1 });
+	        },
+	        decr: function () {
+	            dispatch({ type: 'INCR', by: -1 });
+	        }
+	    };
+	};
 	var Counter = function (props) { return (React.createElement("div", null, React.createElement("p", null, React.createElement("label", null, "Counter: "), React.createElement("b", null, "#", props.counter)), React.createElement("button", {onClick: function (e) { return props.incr(); }}, "INCREMENT"), React.createElement("span", {style: { padding: "0 5px" }}), React.createElement("button", {onClick: function (e) { return props.decr(); }}, "DECREMENT"))); };
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Counter);

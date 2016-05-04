@@ -26,4 +26,4 @@ ReactDOM.render(
         <Counter />
     </Provider>,
     document.getElementById("example")
-);
+);                                                                
