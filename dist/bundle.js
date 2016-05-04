@@ -52,16 +52,17 @@
 	var ReactDOM = __webpack_require__(33);
 	var redux_1 = __webpack_require__(168);
 	var react_redux_1 = __webpack_require__(181);
-	var Hello_1 = __webpack_require__(190);
+	var Hello_1 = __webpack_require__(194);
 	var store = redux_1.createStore(function (state, action) {
 	    switch (action.type) {
-	        case 'INCR':
-	            return { counter: state.counter + action.by };
+	        case 'COUNTER_CHANGE':
+	            return Object.assign({}, state, (_a = {}, _a[action.field] = (typeof state[action.field] === "undefined") ? 0 + action.by : state[action.field] + action.by, _a));
 	        default:
 	            return state;
 	    }
-	}, { counter: 0 });
-	ReactDOM.render(React.createElement(react_redux_1.Provider, {store: store}, React.createElement(Hello_1.default, null)), document.getElementById("example"));
+	    var _a;
+	}, {});
+	ReactDOM.render(React.createElement(react_redux_1.Provider, {store: store}, React.createElement("div", null, React.createElement(Hello_1.default, {field: "test"}), React.createElement(Hello_1.default, {field: "test2"}))), document.getElementById("example"));
 
 
 /***/ },
@@ -267,8 +268,8 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	/* eslint-disable no-unused-vars */
 	'use strict';
+	/* eslint-disable no-unused-vars */
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 	
@@ -280,7 +281,51 @@
 		return Object(val);
 	}
 	
-	module.exports = Object.assign || function (target, source) {
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+	
+			// Detect buggy property enumeration order in older V8 versions.
+	
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+	
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+	
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+	
+			return true;
+		} catch (e) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+	
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 		var from;
 		var to = toObject(target);
 		var symbols;
@@ -21128,15 +21173,15 @@
 	
 	var _warning2 = _interopRequireDefault(_warning);
 	
-	var _isPlainObject = __webpack_require__(170);
+	var _isPlainObject = __webpack_require__(188);
 	
 	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
 	
-	var _hoistNonReactStatics = __webpack_require__(188);
+	var _hoistNonReactStatics = __webpack_require__(192);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
-	var _invariant = __webpack_require__(189);
+	var _invariant = __webpack_require__(193);
 	
 	var _invariant2 = _interopRequireDefault(_invariant);
 	
@@ -21548,6 +21593,164 @@
 
 /***/ },
 /* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getPrototype = __webpack_require__(189),
+	    isHostObject = __webpack_require__(190),
+	    isObjectLike = __webpack_require__(191);
+	
+	/** `Object#toString` result references. */
+	var objectTag = '[object Object]';
+	
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Used to infer the `Object` constructor. */
+	var objectCtorString = funcToString.call(Object);
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+	
+	/**
+	 * Checks if `value` is a plain object, that is, an object created by the
+	 * `Object` constructor or one with a `[[Prototype]]` of `null`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.8.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a plain object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 * }
+	 *
+	 * _.isPlainObject(new Foo);
+	 * // => false
+	 *
+	 * _.isPlainObject([1, 2, 3]);
+	 * // => false
+	 *
+	 * _.isPlainObject({ 'x': 0, 'y': 0 });
+	 * // => true
+	 *
+	 * _.isPlainObject(Object.create(null));
+	 * // => true
+	 */
+	function isPlainObject(value) {
+	  if (!isObjectLike(value) ||
+	      objectToString.call(value) != objectTag || isHostObject(value)) {
+	    return false;
+	  }
+	  var proto = getPrototype(value);
+	  if (proto === null) {
+	    return true;
+	  }
+	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	  return (typeof Ctor == 'function' &&
+	    Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+	}
+	
+	module.exports = isPlainObject;
+
+
+/***/ },
+/* 189 */
+/***/ function(module, exports) {
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeGetPrototype = Object.getPrototypeOf;
+	
+	/**
+	 * Gets the `[[Prototype]]` of `value`.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {null|Object} Returns the `[[Prototype]]`.
+	 */
+	function getPrototype(value) {
+	  return nativeGetPrototype(Object(value));
+	}
+	
+	module.exports = getPrototype;
+
+
+/***/ },
+/* 190 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is a host object in IE < 9.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+	 */
+	function isHostObject(value) {
+	  // Many host objects are `Object` objects that can coerce to strings
+	  // despite having improperly defined `toString` methods.
+	  var result = false;
+	  if (value != null && typeof value.toString != 'function') {
+	    try {
+	      result = !!(value + '');
+	    } catch (e) {}
+	  }
+	  return result;
+	}
+	
+	module.exports = isHostObject;
+
+
+/***/ },
+/* 191 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+	
+	module.exports = isObjectLike;
+
+
+/***/ },
+/* 192 */
 /***/ function(module, exports) {
 
 	/**
@@ -21593,7 +21796,7 @@
 
 
 /***/ },
-/* 189 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -21651,28 +21854,28 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 190 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	var React = __webpack_require__(1);
 	var react_redux_1 = __webpack_require__(181);
-	var mapStateToProps = function (state) {
+	var mapStateToProps = function (state, props) {
 	    return {
-	        counter: state.counter
+	        counter: (state[props.field]) || 0
 	    };
 	};
 	var mapDispatchToProps = function (dispatch) {
 	    return {
-	        incr: function () {
-	            dispatch({ type: 'INCR', by: 1 });
+	        incr: function (field) {
+	            dispatch({ type: 'COUNTER_CHANGE', by: 1, field: field });
 	        },
-	        decr: function () {
-	            dispatch({ type: 'INCR', by: -1 });
+	        decr: function (field) {
+	            dispatch({ type: 'COUNTER_CHANGE', by: -1, field: field });
 	        }
 	    };
 	};
-	var Counter = function (props) { return (React.createElement("div", null, React.createElement("p", null, React.createElement("label", null, "Counter: "), React.createElement("b", null, "#", props.counter)), React.createElement("button", {onClick: function (e) { return props.incr(); }}, "INCREMENT"), React.createElement("span", {style: { padding: "0 5px" }}), React.createElement("button", {onClick: function (e) { return props.decr(); }}, "DECREMENT"))); };
+	var Counter = function (props) { return (React.createElement("div", null, React.createElement("p", null, React.createElement("label", null, props.field, ": "), React.createElement("b", null, "#", props.counter)), React.createElement("button", {onClick: function (e) { return props.incr(props.field); }}, "INCREMENT"), React.createElement("span", {style: { padding: "0 5px" }}), React.createElement("button", {onClick: function (e) { return props.decr(props.field); }}, "DECREMENT"))); };
 	Object.defineProperty(exports, "__esModule", { value: true });
 	exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Counter);
 
