@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "allowJs": true,
+    "outDir": "tsDist",
     "sourceMap": true,
-    "module": "commonjs",
-    "target": "es5",
+    "module": "es6",
+    "target": "es6",
     "jsx": "react"
   },
   "exclude": [
     "node_modules",
-    "typings/browser",
-    "typings/browser.d.ts"
+        "tsDist",
+        "dist",
+        "typings/browser",
+    "typings/browser.d.ts",
+        "webpack.config.js"
   ]
 }
