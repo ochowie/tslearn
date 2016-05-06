@@ -10,7 +10,9 @@ interface HelloProps {
 }
 
 interface HelloState {
+  test: {
     [field: string]: number;
+  }
 }
 
 interface HelloAction {

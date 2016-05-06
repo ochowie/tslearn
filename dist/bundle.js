@@ -71,11 +71,13 @@
 	var store = (0, _redux.createStore)(function (state, action) {
 	    switch (action.type) {
 	        case 'COUNTER_CHANGE':
-	            return Object.assign({}, state, _defineProperty({}, action.field, typeof state[action.field] === "undefined" ? 0 + action.by : state[action.field] + action.by));
+	            return {
+	                test: Object.assign({}, state.test, _defineProperty({}, action.field, typeof state.test[action.field] === "undefined" ? 0 + action.by : state.test[action.field] + action.by))
+	            };
 	        default:
 	            return state;
 	    }
-	}, {});
+	}, { test: {} });
 	ReactDOM.render(React.createElement(_reactRedux.Provider, { store: store }, React.createElement("div", null, React.createElement(_Hello2.default, { field: "test" }), React.createElement(_Hello2.default, { field: "test2" }))), document.getElementById("example"));
 
 /***/ },
@@ -21886,7 +21888,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state, props) {
 	    return {
-	        counter: state[props.field] || 0
+	        counter: state.test[props.field] || 0
 	    };
 	};
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
