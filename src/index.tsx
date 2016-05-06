@@ -12,18 +12,22 @@ import Counter from "./components/Hello";
 let store = createStore(
     (state:HelloState, action:HelloAction) => {
         switch (action.type) {
-            case 'INCR':
-                return {counter: state.counter + action.by};
+            case 'COUNTER_CHANGE':
+                return Object.assign({}, state,
+                  {[action.field]:
+                    (typeof state[action.field] === "undefined") ? 0 + action.by : state[action.field] + action.by});
             default:
                 return state;
         }
-    },
-    {counter: 0});
+    }, {});
 
 
 ReactDOM.render(
     <Provider store={store}>
-        <Counter />
+    <div>
+        <Counter field="test" />
+        <Counter field="test2" />
+        </div>
     </Provider>,
     document.getElementById("example")
-);                                                                
+);

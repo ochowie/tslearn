@@ -4,15 +4,17 @@
 
 interface HelloProps {
     counter?: number;
-    incr?: () => any;
-    decr?: () => any;
+    field?: string;
+    incr?: (field: string) => any;
+    decr?: (field: string) => any;
 }
 
 interface HelloState {
-    counter:number;
+    [field: string]: number;
 }
 
 interface HelloAction {
-    type:string,
+    type:string;
+    field: string;
     by:number;
 }
