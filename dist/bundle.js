@@ -45,25 +45,38 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	/**
-	 * Created by azeyda on 5/1/16.
-	 */
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(33);
-	var redux_1 = __webpack_require__(168);
-	var react_redux_1 = __webpack_require__(181);
-	var Hello_1 = __webpack_require__(194);
-	var store = redux_1.createStore(function (state, action) {
+	
+	var _react = __webpack_require__(1);
+	
+	var React = _interopRequireWildcard(_react);
+	
+	var _reactDom = __webpack_require__(33);
+	
+	var ReactDOM = _interopRequireWildcard(_reactDom);
+	
+	var _redux = __webpack_require__(168);
+	
+	var _reactRedux = __webpack_require__(181);
+	
+	var _Hello = __webpack_require__(194);
+	
+	var _Hello2 = _interopRequireDefault(_Hello);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var store = (0, _redux.createStore)(function (state, action) {
 	    switch (action.type) {
 	        case 'COUNTER_CHANGE':
-	            return Object.assign({}, state, (_a = {}, _a[action.field] = (typeof state[action.field] === "undefined") ? 0 + action.by : state[action.field] + action.by, _a));
+	            return Object.assign({}, state, _defineProperty({}, action.field, typeof state[action.field] === "undefined" ? 0 + action.by : state[action.field] + action.by));
 	        default:
 	            return state;
 	    }
-	    var _a;
 	}, {});
-	ReactDOM.render(React.createElement(react_redux_1.Provider, {store: store}, React.createElement("div", null, React.createElement(Hello_1.default, {field: "test"}), React.createElement(Hello_1.default, {field: "test2"}))), document.getElementById("example"));
-
+	ReactDOM.render(React.createElement(_reactRedux.Provider, { store: store }, React.createElement("div", null, React.createElement(_Hello2.default, { field: "test" }), React.createElement(_Hello2.default, { field: "test2" }))), document.getElementById("example"));
 
 /***/ },
 /* 1 */
@@ -21857,28 +21870,43 @@
 /* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	var React = __webpack_require__(1);
-	var react_redux_1 = __webpack_require__(181);
-	var mapStateToProps = function (state, props) {
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(181);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
 	    return {
-	        counter: (state[props.field]) || 0
+	        counter: state[props.field] || 0
 	    };
 	};
-	var mapDispatchToProps = function (dispatch) {
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return {
-	        incr: function (field) {
+	        incr: function incr(field) {
 	            dispatch({ type: 'COUNTER_CHANGE', by: 1, field: field });
 	        },
-	        decr: function (field) {
+	        decr: function decr(field) {
 	            dispatch({ type: 'COUNTER_CHANGE', by: -1, field: field });
 	        }
 	    };
 	};
-	var Counter = function (props) { return (React.createElement("div", null, React.createElement("p", null, React.createElement("label", null, props.field, ": "), React.createElement("b", null, "#", props.counter)), React.createElement("button", {onClick: function (e) { return props.incr(props.field); }}, "INCREMENT"), React.createElement("span", {style: { padding: "0 5px" }}), React.createElement("button", {onClick: function (e) { return props.decr(props.field); }}, "DECREMENT"))); };
-	Object.defineProperty(exports, "__esModule", { value: true });
-	exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Counter);
-
+	var Counter = function Counter(props) {
+	    return _react2.default.createElement("div", null, _react2.default.createElement("p", null, _react2.default.createElement("label", null, props.field, ": "), _react2.default.createElement("b", null, "#", props.counter)), _react2.default.createElement("button", { onClick: function onClick(e) {
+	            return props.incr(props.field);
+	        } }, "INCREMENT"), _react2.default.createElement("span", { style: { padding: "0 5px" } }), _react2.default.createElement("button", { onClick: function onClick(e) {
+	            return props.decr(props.field);
+	        } }, "DECREMENT"));
+	};
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Counter);
 
 /***/ }
 /******/ ]);

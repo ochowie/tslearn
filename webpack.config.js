@@ -2,7 +2,7 @@
  * Created by azeyda on 5/1/16.
  */
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./tsDist/index.js",
   output: {
     filename: "./dist/bundle.js"
   },
@@ -15,7 +15,14 @@ module.exports = {
 
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: "ts-loader" }
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        query: {
+          presets: ['es2015', 'react']
+        }
+      }
     ],
 
     preLoaders: [

@@ -1,19 +1,34 @@
-"use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var React = require("react");
-var Hello = (function (_super) {
-    __extends(Hello, _super);
-    function Hello() {
-        _super.apply(this, arguments);
-    }
-    Hello.prototype.render = function () {
-        return <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>;
+import React from 'react';
+import {connect} from 'react-redux';
+
+const mapStateToProps = (state, props) => {
+    return {
+        counter: (state[props.field]) || 0
     };
-    return Hello;
-}(React.Component));
-exports.Hello = Hello;
-//# sourceMappingURL=Hello.js.map
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        incr: (field) => {
+            dispatch({type: 'COUNTER_CHANGE', by: 1, field});
+        },
+        decr: (field) => {
+            dispatch({type: 'COUNTER_CHANGE', by: -1, field});
+        }
+    }
+};
+
+
+const Counter = (props) => (
+    <div>
+        <p>
+            <label>{props.field}: </label>
+            <b>#{props.counter}</b>
+        </p>
+        <button onClick={e => props.incr(props.field) }>INCREMENT</button>
+        <span style={{ padding: "0 5px" }}/>
+        <button onClick={e => props.decr(props.field) }>DECREMENT</button>
+    </div>
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
